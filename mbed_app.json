@@ -1,0 +1,16 @@
+{
+   "config": {
+        "SDA":"P6_1",
+        "SCL":"P6_0"
+    },"target_overrides": {
+        "*": {
+            "SDA" : "SDA",
+            "SCL" : "SCL",
+            "target.components_add": ["EMWIN_NOSNTS"],
+            "platform.stdio-convert-newlines": true,
+            "platform.stdio-baud-rate": 115200,
+            "platform.default-serial-baud-rate": 115200
+
+        }
+    }
+}
