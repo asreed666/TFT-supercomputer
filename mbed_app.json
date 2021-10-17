@@ -1,7 +1,10 @@
 {
    "config": {
         "SDA":"P6_1",
-        "SCL":"P6_0"
+        "SCL":"P6_0",
+        "main-stack-size": {
+            "value": 8192
+        }
     },"target_overrides": {
         "*": {
             "SDA" : "SDA",
