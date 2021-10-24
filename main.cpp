@@ -27,7 +27,7 @@ void Display_Init(void)
     /* Clear screen and print splash screen */
     GUI_Clear();
     GUI_SetTextAlign(GUI_TA_HCENTER);
-    GUI_DispStringAt("asr666 Super Computer", 160, 0);
+    GUI_DispStringAt("CITY3032 Super Computer", 160, 0);
 }
 
 int main()
@@ -44,20 +44,37 @@ int main()
         for (int i=0; i < NUMLEDS_X; i++) {
             array[i][j]=LED_OFF;
             GUI_SetColor(GUI_DARKGREEN);
-            GUI_FillCircle(LED_RADIUS+(i)*LED_DIAMETER, TITLE_OFFSET+(j*LED_DIAMETER), LED_RADIUS);
+            GUI_DrawCircle(LED_RADIUS+(i)*LED_DIAMETER, TITLE_OFFSET+(j*LED_DIAMETER), LED_RADIUS);
         }
     }
     while(1) {
         int ledx = rand()%NUMLEDS_X;
         int ledy = rand()%NUMLEDS_Y;
         if (array[ledx][ledy]==LED_OFF) {
-             GUI_SetColor(GUI_GREEN);
+             int colour = rand()%4;
+             switch(colour) {
+                case 0: 
+                    GUI_SetColor(GUI_BLUE);
+                    break;
+                case 1: 
+                    GUI_SetColor(GUI_GREEN);
+                    break;
+                case 2: 
+                    GUI_SetColor(GUI_RED);
+                    break;
+                case 3: 
+                    GUI_SetColor(GUI_YELLOW);
+                    break;
+            }
              GUI_FillCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
              array[ledx][ledy] = LED_ON;
         }
         else {
-             GUI_SetColor(GUI_DARKGREEN);
+             GUI_SetColor(GUI_BLACK);
              GUI_FillCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
+             
+//             GUI_SetColor(GUI_DARKGREEN);
+//             GUI_DrawCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
 //             GUI_FillCircle(8+(ledx)*16, 24+16*(ledy), 8);
              array[ledx][ledy] = LED_OFF;
         }
