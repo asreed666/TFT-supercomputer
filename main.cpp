@@ -43,16 +43,16 @@ int main()
     uint32_t array[NUMLEDS_X][NUMLEDS_Y];
     for (int j=0; j < NUMLEDS_Y; j++) {
         for (int i=0; i < NUMLEDS_X; i++) {
-            array[i][j]=GUI_WHITE;
-            GUI_SetColor(GUI_WHITE);
+            array[i][j]=GUI_GREEN;
+            GUI_SetColor(GUI_GREEN);
 //            GUI_DrawCircle(LED_RADIUS+(i)*LED_DIAMETER, TITLE_OFFSET+(j*LED_DIAMETER), LED_RADIUS);
         }
     }
     while(1) {
         int ledx = rand()%NUMLEDS_X;
         int ledy = rand()%NUMLEDS_Y;
-        array[ledx][ledy] = (array[ledx][ledy] - 0x00101010)&0x00f0f0f0;  // dim the led
-        if (array[ledx][ledy]==0) {
+        array[ledx][ledy] = (array[ledx][ledy] - 0x00000800)&0x0000FC00;  // dim the led
+        if ((array[ledx][ledy]&0xFF00)==0) {
 #ifdef COLOURED_LEDS
              uint32_t colour = rand()%4;
              switch(colour) {
@@ -74,7 +74,7 @@ int main()
                     break;
             }
 #else
-                    GUI_SetColor(GUI_LIGHTGREEN);
+                    GUI_SetColor(GUI_GREEN);
 #endif
              GUI_FillCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
 //             array[ledx][ledy] = LED_ON;
