@@ -12,7 +12,8 @@
 #define NUMLEDS_Y       (DISPLAY_Y/LED_DIAMETER)
 #define LED_OFF         (0)
 #define LED_ON          (1)
-#define TITLE_OFFSET    (16+LED_RADIUS)      
+#define TITLE_OFFSET    (16+LED_RADIUS)
+#undef  COLOURED_LEDS
 
 void Display_Init(void)
 {
@@ -38,45 +39,55 @@ int main()
     printf("Starting Supercomputer\r\n");
 
     GUI_SetFont(GUI_FONT_8X16X2X2);
-    GUI_SetColor(GUI_DARKGREEN);
-    uint8_t array[NUMLEDS_X][NUMLEDS_Y];
+//    GUI_SetColor(GUI_DARKGREEN);
+    uint32_t array[NUMLEDS_X][NUMLEDS_Y];
     for (int j=0; j < NUMLEDS_Y; j++) {
         for (int i=0; i < NUMLEDS_X; i++) {
-            array[i][j]=LED_OFF;
-            GUI_SetColor(GUI_DARKGREEN);
-            GUI_DrawCircle(LED_RADIUS+(i)*LED_DIAMETER, TITLE_OFFSET+(j*LED_DIAMETER), LED_RADIUS);
+            array[i][j]=GUI_WHITE;
+            GUI_SetColor(GUI_WHITE);
+//            GUI_DrawCircle(LED_RADIUS+(i)*LED_DIAMETER, TITLE_OFFSET+(j*LED_DIAMETER), LED_RADIUS);
         }
     }
     while(1) {
         int ledx = rand()%NUMLEDS_X;
         int ledy = rand()%NUMLEDS_Y;
-        if (array[ledx][ledy]==LED_OFF) {
-             int colour = rand()%4;
+        array[ledx][ledy] = (array[ledx][ledy] - 0x00101010)&0x00f0f0f0;  // dim the led
+        if (array[ledx][ledy]==0) {
+#ifdef COLOURED_LEDS
+             uint32_t colour = rand()%4;
              switch(colour) {
                 case 0: 
-                    GUI_SetColor(GUI_BLUE);
+                    GUI_SetColor(GUI_LIGHTBLUE);
+                    array[ledx][ledy] = GUI_LIGHTBLUE;
                     break;
                 case 1: 
-                    GUI_SetColor(GUI_GREEN);
+                    GUI_SetColor(GUI_LIGHTGREEN);
+                    array[ledx][ledy] = GUI_LIGHTGREEN;
                     break;
                 case 2: 
-                    GUI_SetColor(GUI_RED);
+                    array[ledx][ledy] = GUI_LIGHTRED;
+                    GUI_SetColor(GUI_LIGHTRED);
                     break;
-                case 3: 
+                default: 
                     GUI_SetColor(GUI_YELLOW);
+                    array[ledx][ledy] = GUI_YELLOW|0x808080;
                     break;
             }
+#else
+                    GUI_SetColor(GUI_LIGHTGREEN);
+#endif
              GUI_FillCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
-             array[ledx][ledy] = LED_ON;
+//             array[ledx][ledy] = LED_ON;
         }
         else {
-             GUI_SetColor(GUI_BLACK);
+//             array[ledx][ledy]=array[ledx][ledy] >> 1;  // dim the led
+             GUI_SetColor(array[ledx][ledy]);
              GUI_FillCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
              
 //             GUI_SetColor(GUI_DARKGREEN);
 //             GUI_DrawCircle(LED_RADIUS+(ledx)*LED_DIAMETER, TITLE_OFFSET+LED_DIAMETER*(ledy), LED_RADIUS);
 //             GUI_FillCircle(8+(ledx)*16, 24+16*(ledy), 8);
-             array[ledx][ledy] = LED_OFF;
+//             array[ledx][ledy] = LED_OFF;
         }
     }
 }
