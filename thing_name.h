@@ -1,5 +1,7 @@
 #define MQTT_BROKER "192.168.2.207"
 #define THING_NAME "ASR"
 #define LIGHT_LEVEL_TOPIC "ASR/light"
+#define TEMPERATURE_TOPIC "ASR/temperature"
 #define ANNOUNCE_TOPIC "mytopic/announce"
 #define LIGHT_THRESH_TOPIC "ASR/lthresh"
+#define TEMP_THRESH_TOPIC "ASR/tthresh"
