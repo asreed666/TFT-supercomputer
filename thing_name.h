@@ -5,3 +5,5 @@
 #define ANNOUNCE_TOPIC "mytopic/announce"
 #define LIGHT_THRESH_TOPIC "ASR/lthresh"
 #define TEMP_THRESH_TOPIC "ASR/tthresh"
+#define LIGHT_STATE_TOPIC "ASR/lightState"
+#define HEATER_STATE_TOPIC "ASR/heaterState"

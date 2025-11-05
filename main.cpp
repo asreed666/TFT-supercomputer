@@ -219,6 +219,10 @@ int main() {
   lightsR = LEDOFF;
   lightsG = LEDOFF;
   lightsB = LEDOFF;
+  bool tempState = false;
+  bool lastTempState = true;
+  bool lightState = false;
+  bool lastLightState = true;
   printf("WiFi-MQTT example\n");
   /* Initialise display */
   GUI_Init();
@@ -360,17 +364,28 @@ int main() {
 
     //        if (lightDisplay != lastLightDisplay) {
     rc = client.publish(LIGHT_LEVEL_TOPIC, message);
+    if (lightState != lastLightState) {
+        lastLightState = lightState;
+        printf("lights are %s\n", lightState?"ON":"OFF");
+        sprintf(buffer, "%s", lightState?"ON":"OFF");
+        message.payload = (void *)buffer;
+        message.payloadlen = strlen(buffer) + 1;
+
+        rc = client.publish(LIGHT_STATE_TOPIC, message);
+    }
 
     if (lightPercent < (lthresh - 5)) {
       lightsR = LEDON;
       lightsG = LEDOFF;
       lightsB = LEDOFF;
       printf("Light level %d is below the threshold level\n", lightPercent);
+      lightState = true;
     } else if (lightPercent > (lthresh + 5)) {
       lightsR = LEDOFF;
       lightsG = LEDOFF;
       lightsB = LEDON;
-      printf("Light level %d is below the threshold level\n", lightPercent);
+      printf("Light level %d is above the threshold level\n", lightPercent);
+      lightState = false;
     } else {
       lightsR = LEDOFF;
       lightsG = LEDON;
@@ -378,12 +393,26 @@ int main() {
     }
     if (rc != 0)
       printf("publish failed\n");
-    temperature = (temperatureVoltage.read() * 220) - 50;
+    if (tempState != lastTempState) {
+        lastTempState = tempState;
+        sprintf(buffer, "%s", tempState?"ON":"OFF");
+        message.payload = (void *)buffer;
+        message.payloadlen = strlen(buffer) + 1;
+
+        rc = client.publish(HEATER_STATE_TOPIC, message);
+    }    temperature = (temperatureVoltage.read() * 220) - 50;
     sprintf(buffer, "%2.1f", temperature);
     message.payload = (void *)buffer;
     message.payloadlen = strlen(buffer) + 1;
 
     rc = client.publish(TEMPERATURE_TOPIC, message);
+    if (temperature > tthresh + 1) {
+        tempState = false;
+    }
+    else if (temperature < tthresh - 1) {
+        tempState = true; /* Turn the heater on */
+    }
+
     sprintf(buffer, "Temperature is %2.1fC  ", temperature);
     GUI_DispStringAt(buffer, 140, 40);
     if (rxCount != lastRxCount) {
