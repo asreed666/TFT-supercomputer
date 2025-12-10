@@ -1,4 +1,4 @@
-#define MQTT_BROKER "192.168.2.207"
+#define MQTT_BROKER "test.mosquitto.org"
 #define THING_NAME "ASR"
 #define LIGHT_LEVEL_TOPIC "ASR/light"
 #define TEMPERATURE_TOPIC "ASR/temperature"
